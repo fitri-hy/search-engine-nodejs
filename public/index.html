@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Search | HyTech</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+	<header class="w-full flex justify-between items-center px-6 py-4 bg-white shadow fixed">
+		<form id="searchForm" class="flex gap-2 items-center">
+			<img class="w-12 h-12" src="https://hy-tech.my.id/images/logo.png">
+			<input type="text" id="keyword" name="keyword" class="p-2 rounded-md bg-slate-100 w-100 lg:w-[250px] border">
+			<button type="submit" class="bg-blue-500 rounded-md text-white px-4 py-2">Search</button>
+		</form>
+		<a href="https://github.com/fitri-hy">
+			<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			  <image xlink:href="http://hytech-icons.vercel.app/icons/pro/brands/github.svg" width="24" height="24"/>
+			</svg>
+		</a>
+	</header>
+    <div id="results" class="pt-[100px] px-6 pb-12"></div>
+    <div id="pagination"></div>
+
+    <script>
+        async function searchGoogle(keyword, page) {
+            const response = await fetch(`/api/search?keyword=${keyword}&pages=${page}`);
+            const data = await response.json();
+            return data;
+        }
+
+        async function displayResults(keyword, page) {
+            const resultsDiv = document.getElementById('results');
+            const paginationDiv = document.getElementById('pagination');
+            resultsDiv.innerHTML = '';
+            paginationDiv.innerHTML = '';
+
+            const searchResults = await searchGoogle(keyword, page);
+
+            searchResults.forEach(result => {
+                const resultDiv = document.createElement('div');
+                resultDiv.innerHTML = `
+                    <h3><a href="${result.link}" target="_blank">${result.title}</a></h3>
+                    <p>${result.description}</p>
+                    <img src="${result.image}" alt="${result.title}">
+                `;
+                resultsDiv.appendChild(resultDiv);
+            });
+
+            if (page > 1) {
+                const prevButton = document.createElement('button');
+                prevButton.innerText = 'Prev';
+                prevButton.addEventListener('click', () => displayResults(keyword, page - 1));
+                paginationDiv.appendChild(prevButton);
+            }
+
+            const nextButton = document.createElement('button');
+            nextButton.innerText = 'Next';
+            nextButton.addEventListener('click', () => displayResults(keyword, page + 1));
+            paginationDiv.appendChild(nextButton);
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const keyword = document.getElementById('keyword').value;
+            displayResults(keyword, 1);
+        });
+    </script>
+</body>
+</html>
