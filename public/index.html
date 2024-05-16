@@ -8,24 +8,24 @@
 </head>
 <body class="bg-slate-100">
 	<header class="w-full flex justify-between items-center px-6 py-4 bg-white shadow fixed z-10">
-		<form id="searchForm" class="flex gap-2 items-center">
-			<img class="w-12 h-12" src="https://hy-tech.my.id/images/logo.png">
-			<input type="text" id="keyword" name="keyword" class="p-2 rounded-md bg-slate-100 w-100 lg:w-[250px] border">
-			<button type="submit" class="bg-blue-500 rounded-md text-white px-4 py-2">Search</button>
-		</form>
+		<div class="flex items-center gap-2">
+            <img class="w-12 h-12" src="https://hy-tech.my.id/images/logo.png">
+            <h2 class="text-xl font-bold text-gray-700">Hy-Search</h2>
+        </div>
 		<a href="https://github.com/fitri-hy">
-			<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<svg width="26" height="26" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			  <image xlink:href="http://hytech-icons.vercel.app/icons/pro/brands/github.svg" width="24" height="24"/>
 			</svg>
 		</a>
 	</header>
-	<div class="flex">
-		<div id="results" class="w-full pt-[100px] px-6 pb-12 flex flex-col gap-4 mr-[120px]"></div>
-		<div class="w-[200px] h-screen fixed bg-white right-0 pt-[100px] px-4">
-			sidebar
-		</div>
-	</div>
-    <div id="pagination"></div>
+    <form id="searchForm" class="flex gap-2 items-center pt-[100px] justify-center px-9">
+        <input type="text" placeholder="Ingin mencari apa ? ..." id="keyword" name="keyword" class="p-2 rounded-md bg-whote w-full border">
+        <button type="submit" class="bg-blue-500 rounded-md text-white px-4 py-2">Cari</button>
+    </form>
+    <div class="flex flex-col h-full gap-4 lg:max-w-5xl m-auto">
+	    <div id="results" class="w-full pt-9 pb-6 flex flex-col gap-4 p-4"><span class="text-center text-gray-600">Belum ada data ditemukan.</span></div>
+    </div>
+    <div id="pagination" class="flex justify-center mb-6 gap-6"></div>
 
     <script>
         async function searchGoogle(keyword, page) {
@@ -45,7 +45,7 @@
             searchResults.forEach(result => {
                 const resultDiv = document.createElement('div');
                 resultDiv.innerHTML = `
-					<a href="${result.link}" target="_blank" class="">
+					<a href="${result.link}" target="_blank">
 						<div class="p-4 bg-white rounded-md flex flex-col gap-3">
 							<div class="flex items-center gap-2">
 								<img class="h-6 w-6" src="${result.image}" alt="${result.title}">
@@ -63,12 +63,14 @@
             if (page > 1) {
                 const prevButton = document.createElement('button');
                 prevButton.innerText = 'Prev';
+                prevButton.classList.add('bg-blue-500', 'px-4', 'py-2', 'rounded-md', 'text-white');
                 prevButton.addEventListener('click', () => displayResults(keyword, page - 1));
                 paginationDiv.appendChild(prevButton);
             }
 
             const nextButton = document.createElement('button');
             nextButton.innerText = 'Next';
+            nextButton.classList.add('bg-blue-500', 'px-4', 'py-2', 'rounded-md', 'text-white');
             nextButton.addEventListener('click', () => displayResults(keyword, page + 1));
             paginationDiv.appendChild(nextButton);
         }
